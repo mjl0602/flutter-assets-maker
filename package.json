@@ -26,9 +26,6 @@
   },
   "homepage": "https://github.com/mjl0602/flutter-assets-maker#readme",
   "dependencies": {
-    "imagemin": "^6.1.0",
-    "imagemin-pngquant": "^7.0.0",
-    "images": "^3.0.2",
     "sharp": "^0.22.1"
   }
 }
