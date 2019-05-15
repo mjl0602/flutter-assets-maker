@@ -1,0 +1,34 @@
+{
+  "name": "flutter-assets-maker",
+  "version": "0.0.1",
+  "description": "Auto creat flutter assets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "fmaker": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjl0602/flutter-assets-maker.git"
+  },
+  "keywords": [
+    "flutter",
+    "assets",
+    "node",
+    "images"
+  ],
+  "author": "mjl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mjl0602/flutter-assets-maker/issues"
+  },
+  "homepage": "https://github.com/mjl0602/flutter-assets-maker#readme",
+  "dependencies": {
+    "imagemin": "^6.1.0",
+    "imagemin-pngquant": "^7.0.0",
+    "images": "^3.0.2",
+    "sharp": "^0.22.1"
+  }
+}
