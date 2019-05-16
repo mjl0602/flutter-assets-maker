@@ -94,6 +94,7 @@ async function makeAndroid(filePath, androidProject = process.cwd()) {
     await mkdir(`${androidProject}/${androidAssetsPath}/${config.name}/`)
     await resizeAndSave(image, config.size, fileName);
   }
+  return;
 }
 
 /**
@@ -133,6 +134,7 @@ async function makeios(filePath, iosProjectPath = process.cwd()) {
     console.log('生成iOS图标', config);
     await resizeAndSave(image, config.size, `${iosProjectPath}/${iosAssetsPath}/AppIcon.appiconset/${config.fileName}`)
   }
+  return;
 }
 
 async function isSquare(image) {

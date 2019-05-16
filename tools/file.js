@@ -15,6 +15,18 @@ function file(path) {
   });
 }
 
+function copyFile(p1, p2) {
+  return new Promise((r, e) => {
+    fs.copyFile(p1, p2, (error) => {
+      if (error) {
+        e(error)
+      } else (
+        r()
+      )
+    });
+  })
+}
+
 function exists(path) {
   return new Promise((r, e) => {
     fs.exists(path, function (exists) {
@@ -92,4 +104,5 @@ module.exports = {
   mkdir,
   resolve,
   exists,
+  copyFile
 };

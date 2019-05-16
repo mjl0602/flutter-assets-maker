@@ -1,10 +1,27 @@
 const sharp = require("sharp");
-const { file, resolve, find, savefile, mkdir, exists } = require("../tools/file");
+const fs = require('fs')
+const { file, resolve, find, savefile, mkdir, exists, copyFile } = require("../tools/file");
 const { resizeAndSave, deltaOf } = require("../tools/image");
 const { makeios, makeAndroid } = require("./ios");
 module.exports = {
+  initFlutter,
   makeflutter,
   make,
+}
+
+async function initFlutter(flutterProjectPath = process.cwd()) {
+  await mkdir(`${flutterProjectPath}/assets`);
+  await mkdir(`${flutterProjectPath}/assets/fmaker`);
+
+  let android = `${flutterProjectPath}/assets/fmaker/android_icon.png`
+  let ios = `${flutterProjectPath}/assets/fmaker/ios_icon.png`
+  let img = `${flutterProjectPath}/assets/fmaker/example@3x.png`
+
+  await copyFile(resolve('../assets/ic_launcher.png'), android);
+  await copyFile(resolve('../assets/Icon-App-1024x1024@1x.png'), ios);
+  await copyFile(resolve('../assets/example@3x.png'), img);
+
+  console.log(`已经增加示例资源:${android},\n${ios},\n${img}\n查看这些文件，最好替换他们,再来试试 fmaker build`);
 }
 
 async function makeflutter(flutterProjectPath = process.cwd()) {
@@ -76,7 +93,7 @@ async function make(filePath, filePathBuilder) {
   let metadata = await image.metadata();
 
   //先预先检查一下
-  let precheck = filePathBuilder(imageName, 1);
+  let precheck = await filePathBuilder(imageName, 1);
   if (!precheck) {
     return;
   }
