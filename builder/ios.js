@@ -47,15 +47,15 @@ function androidConfig() {
     },
     {
       size: 96,
-      name: "mipmap-xdpi",
+      name: "mipmap-xhdpi",
     },
     {
       size: 144,
-      name: "mipmap-xxdpi",
+      name: "mipmap-xxhdpi",
     },
     {
       size: 192,
-      name: "mipmap-xxxdpi",
+      name: "mipmap-xxxhdpi",
     },
   ]
 }
@@ -73,7 +73,7 @@ async function makeAndroid(filePath, androidProject = process.cwd()) {
   let androidAssetsPath;
   if (isAndroid) {
     console.log('当前目录是一个安卓项目')
-    androidAssetsPath = `app/src/res`
+    androidAssetsPath = `app/src/main/res`
   } else {
     console.log('当前目录似乎不是一个安卓项目目录，生成目录')
     androidAssetsPath = `android`
@@ -88,8 +88,9 @@ async function makeAndroid(filePath, androidProject = process.cwd()) {
   }
 
   for (const config of androidConfig()) {
-    console.log('生成Android图标', config);
+
     let fileName = `${androidProject}/${androidAssetsPath}/${config.name}/ic_launcher.png`
+    console.log('生成Android图标', config, fileName);
     await mkdir(`${androidProject}/${androidAssetsPath}/${config.name}/`)
     await resizeAndSave(image, config.size, fileName);
   }
