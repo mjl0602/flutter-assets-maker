@@ -25,7 +25,7 @@ fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android
 
 # 安装
 
-```
+```bash
 git clone https://github.com/mjl0602/flutter-assets-maker.git
 cd flutter-assets-maker
 npm install -g
@@ -40,7 +40,7 @@ fmaker
 
 Tips:如果找不到合规的文件又想试一试，使用fmaker init来使用我的测试图片。
 
-```
+```bash
 cd yourFlutterProject
 fmaker init #如果暂时找不到图，就用我的图测试
 fmaker build
@@ -60,7 +60,7 @@ fmaker build
 有空就整个例子
 
 > 如果有bug，欢迎提issue，pr更好哦。
-https://github.com/mjl0602/flutter-assets-maker
+> 仓库地址:https://github.com/mjl0602/flutter-assets-maker
 
 #未经作者授权，本文禁止转载
 
