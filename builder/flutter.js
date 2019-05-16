@@ -18,7 +18,7 @@ async function initFlutter(flutterProjectPath = process.cwd()) {
   let img = `${flutterProjectPath}/assets/fmaker/example@3x.png`
 
   await copyFile(resolve('../assets/ic_launcher.png'), android);
-  await copyFile(resolve('../assets/Icon-App-1024x1024@1x.png'), ios);
+  await copyFile(resolve('../assets/ios.png'), ios);
   await copyFile(resolve('../assets/example@3x.png'), img);
 
   console.log(`已经增加示例资源:${android},\n${ios},\n${img}\n查看这些文件，最好替换他们,再来试试 fmaker build`);
