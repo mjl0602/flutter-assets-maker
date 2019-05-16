@@ -31,7 +31,7 @@ cd flutter-assets-maker
 npm install -g
 fmaker
 ```
-如果看到，“没有对应指令,fmaker已安装”的log，就已经安装成功。
+如果看到，“没有对应指令，fmaker已安装”的log，就已经安装成功。
 
 # 使用
 先假定你的项目名叫yourFlutterProject。
@@ -49,17 +49,19 @@ fmaker build
 
 # 注意
 
-> 工具理论上只支持png。
-> 工具会产生两个一样的图，一个是最高倍图，一个是源图，一定程度上增加了项目大小。
-> 建议不要引用fmaker文件夹中的源图，因为他不能被自动切换倍率。
-> fmaker的重复不会增加项目大小，只要你不引入源图。
+- 工具理论上只支持png。
+- 工具会产生两个一样的图，一个是最高倍图，一个是源图，一定程度上增加了项目大小。
+- 建议不要引用fmaker文件夹中的源图，因为他不能被自动切换倍率。
+- fmaker的重复图片不会增加项目大小，只要你不引入源图。
 
 # 示例
 
-TODO
+//TODO
 有空就整个例子
 
+> 如果有bug，欢迎提issue，pr更好哦。
+https://github.com/mjl0602/flutter-assets-maker
 
-
+#未经作者授权，本文禁止转载
 
 
