@@ -5,8 +5,10 @@ const fs = require("fs");
 const join = require("path").join;
 const path = require("path");
 
-const { resizeAndSave, deltaOf } = require("./tools/image");
-const { makeios } = require("./builder/ios");
+
+const { makeios,makeAndroid } = require("./builder/ios");
+const { makeflutter,make } = require("./builder/flutter");
+
 /// 当前执行命令的路径
 let execPath = process.cwd();
 
@@ -25,41 +27,21 @@ async function main(args) {
     console.log("正在创建iOS");
     makeios(args[3]);
     return;
+
   } else if (args[2] == "android") {
-    console.log("正在创建Android");
-    // makeios(args[3]);
+    console.log("安卓的命令还没写好");
+    makeAndroid(args[3]);
+    return;
+  } else if (args[2] == "flutter") {
+    console.log("创建flutter资源");
+    makeflutter();
     return;
   }
   console.log("没对应指令", args[2]);
 }
 
 
-// 生成一张图片的低倍率版本
-async function make(filePath) {
-  // 获取文件名
-  let fileName = filePath.substring(
-    filePath.lastIndexOf("/") + 1,
-    filePath.length,
-  );
 
-  let imageName = fileName.replace(/@(\S*)[Xx]/g, "").replace(/\.\S*$/, "");
-
-  // 获取倍率
-  let delta = deltaOf(filePath);
-  console.log("\n当前图片倍率", delta);
-  console.log("\n开始生成\n");
-  let image = sharp(filePath);
-  let metadata = await image.metadata();
-  let size = parseInt((metadata.width / delta) * i)
-  for (let i = delta - 1; i > 0; i--) {
-    let info = await resizeAndSave(
-      image, size, `${execPath}/${imageName}@${i}x.png`,
-    );
-    console.log(
-      `生成${imageName}的${i}倍图,尺寸：宽:${info.width} 高${info.height}`,
-    );
-  }
-}
 
 
 
