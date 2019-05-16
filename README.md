@@ -5,9 +5,11 @@
 - node.js环境
 - npm包管理工具
 
+
+
 # fmaker功能
 
-![fmaker](https://github.com/mjl0602/flutter-assets-maker/blob/master/assets/ic_launcher.png?raw=true)
+<img src="https://github.com/mjl0602/flutter-assets-maker/blob/master/assets/ic_launcher.png?raw=true" width = "150" height = "150" div/>
 
 fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android项目生成图标
 
