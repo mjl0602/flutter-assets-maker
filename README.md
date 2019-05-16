@@ -7,6 +7,8 @@
 
 # fmaker功能
 
+![fmaker](https://github.com/mjl0602/flutter-assets-maker/blob/master/assets/ic_launcher.png?raw=true)
+
 fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android项目生成图标
 
 ### 按倍率生成图片
