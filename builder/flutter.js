@@ -43,8 +43,8 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
       if (delta == 1) {
         return `${flutterProjectPath}/assets/${imageName}.png`
       }
-      await mkdir(`${flutterProjectPath}/assets/${delta}x/`);
-      return `${flutterProjectPath}/assets/${delta}x/${imageName}.png`
+      await mkdir(`${flutterProjectPath}/assets/${delta}.0x/`);
+      return `${flutterProjectPath}/assets/${delta}.0x/${imageName}.png`
     });
   }
 

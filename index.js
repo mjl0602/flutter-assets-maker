@@ -24,12 +24,11 @@ async function main(args) {
     make(args[3]);
     return;
   } else if (args[2] == "ios") {
-    console.log("正在创建iOS");
+    console.log("单独创建iOS图标");
     makeios(args[3]);
     return;
-
   } else if (args[2] == "android") {
-    console.log("安卓的命令还没写好");
+    console.log("单独创建安卓图标");
     makeAndroid(args[3]);
     return;
   } else if (args[2] == "flutter") {
@@ -37,7 +36,7 @@ async function main(args) {
     makeflutter();
     return;
   }
-  console.log("没对应指令", args[2]);
+  console.log("没有对应指令", args[2]);
 }
 
 
