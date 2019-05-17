@@ -42,7 +42,7 @@ async function main(args) {
     console.log("\nflutter资源全部创建完成\n");
     return;
   }
-  console.log("没有对应指令,fmaker已安装", args[2]);
+  console.log("没有对应指令,fmaker已安装");
 }
 
 
