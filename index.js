@@ -19,7 +19,7 @@ async function main(args) {
   console.log("args", args);
   if (!args[2]) {
     console.log("命令错误，请输入正确的命令格式");
-    return;
+    // return;
   } else if (args[2] == "init") {
     console.log("为你添加一些示例图片");
     initFlutter();
