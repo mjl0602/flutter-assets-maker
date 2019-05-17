@@ -25,7 +25,7 @@ async function main(args) {
     initFlutter();
     return;
   } else if (args[2] == "make") {
-    console.log("正在通过指定文件创建");
+    console.log("正在通过指定文件创建低倍图");
     make(args[3]);
     return;
   } else if (args[2] == "ios") {
