@@ -5,8 +5,6 @@
 - node.js环境
 - npm包管理工具
 
-
-
 # fmaker功能
 
 <img src="https://github.com/mjl0602/flutter-assets-maker/blob/master/assets/ic_launcher.png?raw=true" width = "150" height = "150" div/>
@@ -26,6 +24,35 @@ fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android
 如果`/assets/fmaker`文件夹下有名为`ios_icon.png`和`android_icon.png`的文件，那么`fmaker`会自动识别这两个文件，直接将图标生成到项目中，不需要额外的复制粘贴。
 
 > 注意：iOS的图标不可含有alpha通道，Android的图标可以包含。共同的一点是，图标必须是正方形，`fmaker`会帮你检查icon尺寸，并在log中输出错误。
+
+### 生成yaml引用与r文件
+
+现在会自动生成yaml的资源引用，你需要先添加：
+
+```yaml
+flutter:
+  uses-material-design: true
+  assets:
+    # 添加下面这一句
+    # fmaker
+```
+那么在运行`fmaker build`后，就会自动生成:
+```yaml
+flutter:
+  uses-material-design: true
+  assets:
+    # fmaker
+    - assets/example.png
+    # fmaker-end
+```
+对应的，也会在lib目录下生成r.dart文件，变量名会自动转为驼峰形式
+```dart
+class R {
+  static final String aqweqAsqQweqDasQwr = 'assets/aqweq-asq_qweq-das_qwr.png';
+  static final String assfaAbAResize = 'assets/assfa(ab)a-resize.png';
+  static final String example = 'assets/example.png';
+}
+```
 
 # 安装
 
