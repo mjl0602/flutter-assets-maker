@@ -90,7 +90,7 @@ async function makeAndroid(filePath, androidProject = process.cwd()) {
   for (const config of androidConfig()) {
 
     let fileName = `${androidProject}/${androidAssetsPath}/${config.name}/ic_launcher.png`
-    console.log('生成Android图标', config, fileName);
+    console.log('生成Android图标', config);
     await mkdir(`${androidProject}/${androidAssetsPath}/${config.name}/`)
     await resizeAndSave(image, config.size, fileName);
   }
@@ -145,7 +145,7 @@ async function isSquare(image) {
         return
       }
       if (metadata.width === metadata.height) {
-        console.log(metadata);
+        // console.log(metadata);
         r(true);
         return
       }
@@ -159,7 +159,7 @@ async function findProjectName(path) {
   let pathList = await find(path);
   let iosProjectName = ''
   for (const file of pathList) {
-    console.log(file);
+    // console.log(file);
     let name = file.substring(
       file.lastIndexOf("/") + 1,
       file.length,

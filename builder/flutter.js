@@ -88,16 +88,24 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
     })
     .join("\n");
   console.log(assetsListString);
-  replaceStringInFile(
+  var replaceSuccess = replaceStringInFile(
     `${flutterProjectPath}/pubspec.yaml`,
     /(# fmaker)[\w\W]*(# fmaker-end)/g,
     "# fmaker\n    # fmaker-end",
   );
-  replaceStringInFile(
+  var generateSuccess = replaceStringInFile(
     `${flutterProjectPath}/pubspec.yaml`,
     "# fmaker",
-    "# fmaker\n" + assetsListString,
+    "# fmaker\n" +
+      assetsListString +
+      (replaceSuccess ? "" : "\n    # fmaker-end"),
   );
+
+  if (!generateSuccess) {
+    console.log(
+      "\n在pubspec.yaml中没有找到生成标记，请添加‘# fmaker’标记！！\n",
+    );
+  }
 
   /// 保存到r.dart
   await mkdir(`${flutterProjectPath}/lib`);
@@ -121,8 +129,9 @@ function toHump(name) {
 
 function replaceStringInFile(file, target, replace) {
   var content = fs.readFileSync(file, { encoding: "UTF-8" });
-  content = content.replace(target, replace);
-  fs.writeFileSync(file, content);
+  var newContent = content.replace(target, replace);
+  fs.writeFileSync(file, newContent);
+  return content != newContent;
 }
 
 // 生成一张图片的低倍率版本
@@ -144,8 +153,8 @@ async function make(filePath, filePathBuilder) {
 
   // 获取倍率
   let delta = deltaOf(filePath);
-  console.log("\n当前图片倍率", delta, imageName);
-  console.log("\n开始生成\n");
+  console.log(`\n正在生成:${imageName} 倍率:${delta}`);
+  // console.log("\n开始生成\n");
   let image = sharp(filePath);
   let metadata = await image.metadata();
 
@@ -162,10 +171,10 @@ async function make(filePath, filePathBuilder) {
       console.log("中断生成");
       return;
     }
-    console.log("生成中");
+    // console.log("生成中");
     let info = await resizeAndSave(image, size, targetPath);
-    console.log(
-      `生成${imageName}的${i}倍图,尺寸：宽:${info.width} 高${info.height}`,
-    );
+    // console.log(
+    //   `已生成: ${imageName} ${i}倍图,尺寸：宽:${info.width} 高${info.height}`,
+    // );
   }
 }
