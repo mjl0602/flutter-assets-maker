@@ -1,10 +1,18 @@
-
+const fs = require("fs");
+let path = require("path");
 module.exports = {
   resizeAndSave,
-  deltaOf
-}
+  deltaOf,
+};
 
 function resizeAndSave(image, size, fileName) {
+  // console.log("resizeAndSave", fileName);
+  var targetPath = fileName.split("/");
+  targetPath.pop();
+  targetPath = targetPath.join("/");
+  fs.mkdirSync(targetPath, {
+    recursive: true,
+  });
   return new Promise((r, e) => {
     image.resize(size).toFile(fileName, (err, info) => {
       err ? e(err) : r(info);

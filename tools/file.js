@@ -19,12 +19,10 @@ function copyFile(p1, p2) {
   return new Promise((r, e) => {
     fs.copyFile(p1, p2, (error) => {
       if (error) {
-        e(error)
-      } else (
-        r()
-      )
+        e(error);
+      } else r();
     });
-  })
+  });
 }
 
 function exists(path) {
@@ -36,12 +34,15 @@ function exists(path) {
         r(false);
       }
     });
-  })
+  });
 }
 
 // 查找目录下文件
 function find(startPath) {
   let result = [];
+  fs.mkdirSync(startPath, {
+    recursive: true,
+  });
   function finder(path) {
     let files = fs.readdirSync(path);
     files.forEach((val, index) => {
@@ -73,6 +74,12 @@ function findAll(startPath) {
 
 function savefile(path, content) {
   console.log("保存文件", path);
+  var targetPath = path.split("/");
+  targetPath.pop();
+  targetPath = targetPath.join("/");
+  fs.mkdirSync(targetPath, {
+    recursive: true,
+  });
   return new Promise((r, e) => {
     fs.writeFile(path, content, {}, async function (err) {
       if (!err) {
@@ -104,5 +111,5 @@ module.exports = {
   mkdir,
   resolve,
   exists,
-  copyFile
+  copyFile,
 };
