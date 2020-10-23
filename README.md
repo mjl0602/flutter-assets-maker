@@ -25,9 +25,9 @@ fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android
 
 > 注意：iOS的图标不可含有alpha通道，Android的图标可以包含。共同的一点是，图标必须是正方形，`fmaker`会帮你检查icon尺寸，并在log中输出错误。
 
-### 生成yaml引用与r文件
+### 生成yaml引用与r.dart
 
-现在会自动生成yaml的资源引用，你需要先添加：
+为了方便`flutter`使用，现在会自动生成yaml的资源引用，你需要先添加：
 
 ```yaml
 flutter:
