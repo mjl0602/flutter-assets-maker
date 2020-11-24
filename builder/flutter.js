@@ -30,7 +30,7 @@ async function initFlutter(flutterProjectPath = process.cwd()) {
   await copyFile(resolve("../assets/example@3x.png"), img);
 
   console.log(
-    `已经增加示例资源:${android},\n${ios},\n${img}\n查看这些文件，最好替换他们,再来试试 fmaker build`,
+    `已经增加示例资源:${android},\n${ios},\n${img}\n查看这些文件，最好替换他们,再来试试 fmaker build`
   );
 }
 
@@ -39,7 +39,7 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
   if (!isFlutter) {
     console.log(
       `${flutterProjectPath}/pubspec.yaml 不存在`,
-      "你必须在flutter目录下运行",
+      "你必须在flutter目录下运行"
     );
     return false;
   }
@@ -91,19 +91,19 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
   var replaceSuccess = replaceStringInFile(
     `${flutterProjectPath}/pubspec.yaml`,
     /(# fmaker)[\w\W]*(# fmaker-end)/g,
-    "# fmaker\n    # fmaker-end",
+    "# fmaker\n    # fmaker-end"
   );
   var generateSuccess = replaceStringInFile(
     `${flutterProjectPath}/pubspec.yaml`,
     "# fmaker",
     "# fmaker\n" +
       assetsListString +
-      (replaceSuccess ? "" : "\n    # fmaker-end"),
+      (replaceSuccess ? "" : "\n    # fmaker-end")
   );
 
   if (!generateSuccess) {
     console.log(
-      "\n在pubspec.yaml中没有找到生成标记，请添加‘# fmaker’标记！！\n",
+      "\n在pubspec.yaml中没有找到生成标记，请添加‘# fmaker’标记！！\n"
     );
   }
 
@@ -113,7 +113,10 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
   var rContentListString = allFileName
     .map((name) => {
       var dartName = toHump(name);
-      return `  static final String ${dartName} = 'assets/${name}.png';`;
+      return (
+        `  /// ![](${flutterProjectPath}/assets/${name}.png)\n` +
+        `  static final String ${dartName} = 'assets/${name}.png';`
+      );
     })
     .join("\n");
   var rContent = `class R {\n${rContentListString}\n}`;
@@ -146,7 +149,7 @@ async function make(filePath, filePathBuilder) {
   // 获取文件名
   let fileName = filePath.substring(
     filePath.lastIndexOf("/") + 1,
-    filePath.length,
+    filePath.length
   );
 
   let imageName = fileName.replace(/@(\S*)[Xx]/g, "").replace(/\.\S*$/, "");
