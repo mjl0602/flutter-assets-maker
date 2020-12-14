@@ -32,6 +32,11 @@ fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android
 fmaker folder
 ```
 
+可以把Icon?文件加入.gitignore。  
+如下加入即可：
+```
+Icon?
+```
 ### 生成yaml引用与r.dart
 
 为了方便`flutter`使用，现在会自动生成yaml的资源引用，你需要先添加：
