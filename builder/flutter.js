@@ -78,8 +78,8 @@ async function makeFolder(flutterProjectPath = process.cwd()) {
     left: 0,
     top: 0,
     blend: "in"
-  }])
-  // var result = await icon.toBuffer();
+  }]);
+
   var result = await folderIcon.composite([
     {
       input: await iconBack.resize(128 * muti, 128 * muti).toBuffer(),
@@ -94,10 +94,28 @@ async function makeFolder(flutterProjectPath = process.cwd()) {
   ]).toBuffer();
 
   var targetFilePath = `${flutterProjectPath}/_icon.png`;
+  console.log('生成图标中...')
   await savefile(targetFilePath, result);
   var res = execSync(`${shellPath} set ${flutterProjectPath} ${targetFilePath}`).toString();
+  console.log('正在设置图标:', res)
+  console.log('图标设置成功')
+
+  console.log('\n清理...')
   fs.rmSync(targetFilePath);
-  console.log(res)
+  console.log('清理完成')
+
+  // 处理.gitignore
+  console.log('\n尝试添加 .gitignore')
+  let gitignore = fs.readFileSync(`${flutterProjectPath}/.gitignore`, { encoding: 'utf-8' });
+  // console.log(gitignore);
+  if (gitignore.indexOf('\nIcon?\n') == -1) {
+    gitignore = gitignore + '\n\n# fmaker folder icon\nIcon?\n'
+    fs.writeFileSync(`${flutterProjectPath}/.gitignore`, gitignore);
+    // console.log(gitignore);
+    console.log('.gitignore 添加完成')
+  } else {
+    console.log('无需添加.gitignore')
+  }
 }
 
 async function makeflutter(flutterProjectPath = process.cwd()) {

@@ -32,7 +32,7 @@ fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android
 fmaker folder
 ```
 
-可以把Icon?文件加入.gitignore。  
+脚本会自动把Icon?加入.gitignore。  
 如下加入即可：
 ```
 Icon?
