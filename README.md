@@ -24,6 +24,13 @@ fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android
 如果`/assets/fmaker`文件夹下有名为`ios_icon.png`和`android_icon.png`的文件，那么`fmaker`会自动识别这两个文件，直接将图标生成到项目中，不需要额外的复制粘贴。
 
 > 注意：iOS的图标不可含有alpha通道，Android的图标可以包含。共同的一点是，图标必须是正方形，`fmaker`会帮你检查icon尺寸，并在log中输出错误。
+### 生成文件夹图标
+
+在项目目录下运行：
+
+```
+fmaker folder
+```
 
 ### 生成yaml引用与r.dart
 

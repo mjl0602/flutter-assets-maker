@@ -15,6 +15,7 @@ module.exports = {
   initFlutter,
   makeflutter,
   make,
+  makeFolder,
 };
 
 async function initFlutter(flutterProjectPath = process.cwd()) {
@@ -32,6 +33,71 @@ async function initFlutter(flutterProjectPath = process.cwd()) {
   console.log(
     `已经增加示例资源:${android},\n${ios},\n${img}\n查看这些文件，最好替换他们,再来试试 fmaker build`
   );
+}
+
+const execSync = require('child_process').execSync
+
+/// 创建图标
+async function makeFolder(flutterProjectPath = process.cwd()) {
+  let isFlutter = await exists(`${flutterProjectPath}/pubspec.yaml`);
+  if (!isFlutter) {
+    console.log(
+      `${flutterProjectPath}/pubspec.yaml 不存在`,
+      "你必须在flutter目录下运行"
+    );
+    return false;
+  }
+  let hasIcon = await exists(`${flutterProjectPath}/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png`);
+  if (!hasIcon) {
+    console.log(
+      `ios icon 不存在`,
+      "必须在flutter工程下运行，fmaker将自动获取iOS项目下的图标"
+    );
+    return false;
+  }
+
+  // 设置图标的脚本的位置
+  var shellPath = resolve("../assets/fileicon");
+
+  // 定义
+  var size = 256;
+  var iconSize = 120;
+  var muti = 2;
+  // 图包素材
+  var folderIcon = sharp(resolve("../assets/folder.png")).resize(size * muti, size * muti);
+  var rawIcon = sharp(
+    `${flutterProjectPath}/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png`
+  ).resize(iconSize * muti, iconSize * muti);
+
+  var iconShape = sharp(resolve("../assets/shape.png"));
+  var iconBack = sharp(resolve("../assets/back.png"));
+
+
+  var icon = iconShape.resize(iconSize * muti, iconSize * muti).composite([{
+    input: await rawIcon.toBuffer(),
+    left: 0,
+    top: 0,
+    blend: "in"
+  }])
+  // var result = await icon.toBuffer();
+  var result = await folderIcon.composite([
+    {
+      input: await iconBack.resize(128 * muti, 128 * muti).toBuffer(),
+      top: 71 * muti,
+      left: 64 * muti,
+    },
+    {
+      input: await icon.toBuffer(),
+      top: 75 * muti,
+      left: 68 * muti,
+    },
+  ]).toBuffer();
+
+  var targetFilePath = `${flutterProjectPath}/_icon.png`;
+  await savefile(targetFilePath, result);
+  var res = execSync(`${shellPath} set ${flutterProjectPath} ${targetFilePath}`).toString();
+  fs.rmSync(targetFilePath);
+  console.log(res)
 }
 
 async function makeflutter(flutterProjectPath = process.cwd()) {
@@ -97,8 +163,8 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
     `${flutterProjectPath}/pubspec.yaml`,
     "# fmaker",
     "# fmaker\n" +
-      assetsListString +
-      (replaceSuccess ? "" : "\n    # fmaker-end")
+    assetsListString +
+    (replaceSuccess ? "" : "\n    # fmaker-end")
   );
 
   if (!generateSuccess) {

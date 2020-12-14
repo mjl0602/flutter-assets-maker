@@ -1,6 +1,6 @@
 {
   "name": "flutter-assets-maker",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Auto creat flutter assets",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,6 @@
   },
   "homepage": "https://github.com/mjl0602/flutter-assets-maker#readme",
   "dependencies": {
-    "sharp": "^0.23.4"
+    "sharp": "^0.26.3"
   }
 }
