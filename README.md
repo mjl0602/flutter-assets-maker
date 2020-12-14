@@ -3,7 +3,7 @@
 ## 提前全局安装
 - flutter
 - node.js环境 下载：https://nodejs.org/zh-cn/ 下好安装即可，很简单
-- npm包管理工具
+- npm包管理工具(Node自带)
 
 # fmaker功能
 
