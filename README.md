@@ -11,6 +11,23 @@
 
 fmaker是一个flutter辅助图片处理工具，也可以用来给iOS或Android项目生成图标
 
+指令帮助：
+```bash
+fmaker -h
+Usage: fmaker [options] [command]
+
+Options:
+  -V, --version   output the version number
+  -h, --help      display help for command
+
+Commands:
+  init            在一个Flutter项目中初始化tmaker，为你创建文件夹，添加示例文件和添加.gitignore参数
+  build [parts]   创建资源，可指定创建指定部分，例: fmaker build ios,android,assets
+  preview         仅创建资源的预览注释，也就是r.preview.dart文件
+  folder          把app的图标渲染在本项目的文件夹上(仅mac)
+  help [command]  display help for command
+```
+
 ### 按倍率生成图片
 `fmaker`可以自动识别项目下`/assets/fmaker`中的多倍图，将多倍图按flutter格式递归转换为2.0x，3.0x，4.0x等文件夹，再将压缩后的低倍图保存到assets中，保证flutter可以自动识别低倍率的图片。例如，在文件夹下放置`example@3x.png`，会生成三倍图，两倍图和一倍图。
 

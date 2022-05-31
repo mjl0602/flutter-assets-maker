@@ -13,6 +13,7 @@ const { resizeAndSave, deltaOf } = require("../tools/image");
 const { makeios, makeAndroid } = require("./ios");
 module.exports = {
   initFlutter,
+  makePreview,
   makeflutter,
   make,
   makeFolder,
@@ -26,16 +27,46 @@ async function initFlutter(flutterProjectPath = process.cwd()) {
   let ios = `${flutterProjectPath}/assets/fmaker/ios_icon.png`;
   let img = `${flutterProjectPath}/assets/fmaker/example@3x.png`;
 
+  var files = fs.readdirSync(`${flutterProjectPath}/assets/fmaker/`);
+  if (files.length == 0) {
+    console.log("添加示例图 example@3x.png");
+    await copyFile(resolve("../assets/example@3x.png"), img);
+  } else {
+    console.log("fmaker文件夹非空，无需添加示例图");
+  }
+
   await copyFile(resolve("../assets/ic_launcher.png"), android);
   await copyFile(resolve("../assets/ios.png"), ios);
-  await copyFile(resolve("../assets/example@3x.png"), img);
 
+  addIgnoreIfNeed();
   console.log(
     `已经增加示例资源:${android},\n${ios},\n${img}\n查看这些文件，最好替换他们,再来试试 fmaker build`
   );
 }
 
-const execSync = require('child_process').execSync
+function addIgnoreIfNeed() {
+  // 处理.gitignore
+  let cmdPath = process.cwd();
+  console.log("\n检查 .gitignore");
+  if (!fs.existsSync(`${cmdPath}/.gitignore`)) {
+    // fs.writeFileSync(`${cmdPath}/.gitignore`, '');
+    console.log("没有发现.gitignore文件，建议创建.gitignore文件");
+    return;
+  }
+  let gitignore = fs.readFileSync(`${cmdPath}/.gitignore`, {
+    encoding: "utf-8",
+  });
+  if (gitignore.indexOf("\nlib/r.preview.dart\n") == -1) {
+    gitignore =
+      gitignore + "\n\n# ignore assets preview file\nlib/r.preview.dart\n";
+    fs.writeFileSync(`${cmdPath}/.gitignore`, gitignore);
+    console.log(".gitignore 添加完成");
+  } else {
+    console.log("无需添加.gitignore");
+  }
+}
+
+const execSync = require("child_process").execSync;
 
 /// 创建图标
 async function makeFolder(flutterProjectPath = process.cwd()) {
@@ -47,7 +78,9 @@ async function makeFolder(flutterProjectPath = process.cwd()) {
     );
     return false;
   }
-  let hasIcon = await exists(`${flutterProjectPath}/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png`);
+  let hasIcon = await exists(
+    `${flutterProjectPath}/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png`
+  );
   if (!hasIcon) {
     console.log(
       `ios icon 不存在`,
@@ -64,7 +97,10 @@ async function makeFolder(flutterProjectPath = process.cwd()) {
   var iconSize = 120;
   var muti = 2;
   // 图包素材
-  var folderIcon = sharp(resolve("../assets/folder.png")).resize(size * muti, size * muti);
+  var folderIcon = sharp(resolve("../assets/folder.png")).resize(
+    size * muti,
+    size * muti
+  );
   var rawIcon = sharp(
     `${flutterProjectPath}/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png`
   ).resize(iconSize * muti, iconSize * muti);
@@ -72,53 +108,62 @@ async function makeFolder(flutterProjectPath = process.cwd()) {
   var iconShape = sharp(resolve("../assets/shape.png"));
   var iconBack = sharp(resolve("../assets/back.png"));
 
-
-  var icon = iconShape.resize(iconSize * muti, iconSize * muti).composite([{
-    input: await rawIcon.toBuffer(),
-    left: 0,
-    top: 0,
-    blend: "in"
-  }]);
-
-  var result = await folderIcon.composite([
+  var icon = iconShape.resize(iconSize * muti, iconSize * muti).composite([
     {
-      input: await iconBack.resize(128 * muti, 128 * muti).toBuffer(),
-      top: 71 * muti,
-      left: 64 * muti,
+      input: await rawIcon.toBuffer(),
+      left: 0,
+      top: 0,
+      blend: "in",
     },
-    {
-      input: await icon.toBuffer(),
-      top: 75 * muti,
-      left: 68 * muti,
-    },
-  ]).toBuffer();
+  ]);
+
+  var result = await folderIcon
+    .composite([
+      {
+        input: await iconBack.resize(128 * muti, 128 * muti).toBuffer(),
+        top: 71 * muti,
+        left: 64 * muti,
+      },
+      {
+        input: await icon.toBuffer(),
+        top: 75 * muti,
+        left: 68 * muti,
+      },
+    ])
+    .toBuffer();
 
   var targetFilePath = `${flutterProjectPath}/_icon.png`;
-  console.log('生成图标中...')
+  console.log("生成图标中...");
   await savefile(targetFilePath, result);
-  var res = execSync(`${shellPath} set ${flutterProjectPath} ${targetFilePath}`).toString();
-  console.log('正在设置图标:', res)
-  console.log('图标设置成功')
+  var res = execSync(
+    `${shellPath} set ${flutterProjectPath} ${targetFilePath}`
+  ).toString();
+  console.log("正在设置图标:", res);
+  console.log("图标设置成功");
 
-  console.log('\n清理...')
+  console.log("\n清理...");
   fs.rmSync(targetFilePath);
-  console.log('清理完成')
+  console.log("清理完成");
 
   // 处理.gitignore
-  console.log('\n尝试添加 .gitignore')
-  let gitignore = fs.readFileSync(`${flutterProjectPath}/.gitignore`, { encoding: 'utf-8' });
+  console.log("\n尝试添加 .gitignore");
+  let gitignore = fs.readFileSync(`${flutterProjectPath}/.gitignore`, {
+    encoding: "utf-8",
+  });
   // console.log(gitignore);
-  if (gitignore.indexOf('\nIcon?\n') == -1) {
-    gitignore = gitignore + '\n\n# fmaker folder icon\nIcon?\n'
+  if (gitignore.indexOf("\nIcon?\n") == -1) {
+    gitignore = gitignore + "\n\n# fmaker folder icon\nIcon?\n";
     fs.writeFileSync(`${flutterProjectPath}/.gitignore`, gitignore);
     // console.log(gitignore);
-    console.log('.gitignore 添加完成')
+    console.log(".gitignore 添加完成");
   } else {
-    console.log('无需添加.gitignore')
+    console.log("无需添加.gitignore");
   }
 }
 
-async function makeflutter(flutterProjectPath = process.cwd()) {
+async function makeflutter(flutterProjectPath = process.cwd(), config) {
+  var { ios: _makeIOS, android: _buildAndroid, assets: _makeAssets } = config;
+  addIgnoreIfNeed();
   let isFlutter = await exists(`${flutterProjectPath}/pubspec.yaml`);
   if (!isFlutter) {
     console.log(
@@ -133,7 +178,7 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
     await mkdir(`${flutterProjectPath}/assets/fmaker`);
   }
   let files = await find(`${flutterProjectPath}/assets/fmaker`);
-  console.log("读取到文件", files);
+  console.log(`读取到${files.length}个文件`);
   if (files.length == 0) {
     console.log("请先添加文件到fmaker目录");
   }
@@ -144,28 +189,29 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
     }
 
     await make(imgPath, async (imageName, delta, isCheck) => {
-      if (imageName == "ios_icon") {
+      if (imageName == "ios_icon" && !!_makeIOS) {
         await makeios(imgPath, `${flutterProjectPath}/ios`);
         return "";
       }
-      if (imageName == "android_icon") {
+      if (imageName == "android_icon" && !!_buildAndroid) {
         await makeAndroid(imgPath, `${flutterProjectPath}/android`);
         return "";
       }
       if (delta == 1) {
         if (!isCheck) {
-          console.log("创建资源图", imageName);
+          // console.log("创建资源图", imageName);
           allFileName.push(imageName);
         }
         return `${flutterProjectPath}/assets/${imageName}.png`;
       }
-      await mkdir(`${flutterProjectPath}/assets/${delta}.0x/`);
+      if (!!_makeAssets)
+        await mkdir(`${flutterProjectPath}/assets/${delta}.0x/`);
       return `${flutterProjectPath}/assets/${delta}.0x/${imageName}.png`;
     });
   }
+  if (!_makeAssets) return;
   console.log("资源目录：", allFileName);
-
-  /// 保存到yaml
+  // 保存到yaml
   var assetsListString = allFileName
     .map((name) => {
       return `    - assets/${name}.png`;
@@ -181,8 +227,8 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
     `${flutterProjectPath}/pubspec.yaml`,
     "# fmaker",
     "# fmaker\n" +
-    assetsListString +
-    (replaceSuccess ? "" : "\n    # fmaker-end")
+      assetsListString +
+      (replaceSuccess ? "" : "\n    # fmaker-end")
   );
 
   if (!generateSuccess) {
@@ -198,13 +244,73 @@ async function makeflutter(flutterProjectPath = process.cwd()) {
     .map((name) => {
       var dartName = toHump(name);
       return (
-        `  /// ![](${flutterProjectPath}/assets/${name}.png)\n` +
+        `  /// {@macro fmaker.${dartName}.preview}\n` +
         `  static final String ${dartName} = 'assets/${name}.png';`
       );
     })
     .join("\n");
   var rContent = `class R {\n${rContentListString}\n}`;
   fs.writeFileSync(`${flutterProjectPath}/lib/r.dart`, rContent);
+
+  /// 保存到r.preview.dart
+  var rPreviewContentListString = allFileName
+    .map((name) => {
+      var dartName = toHump(name);
+      return (
+        `/// {@template fmaker.${dartName}.preview}\n` +
+        `/// ![](${flutterProjectPath}/assets/${name}.png)\n` +
+        `/// {@endtemplate}`
+      );
+    })
+    .join("\n\n");
+  var rPreviewContent = `${rPreviewContentListString} \n\n// ignore_for_file: camel_case_types, unused_element \nclass _ {}`;
+  fs.writeFileSync(`${flutterProjectPath}/lib/r.preview.dart`, rPreviewContent);
+}
+
+async function makePreview() {
+  var flutterProjectPath = process.cwd();
+  addIgnoreIfNeed();
+  let isFlutter = await exists(`${flutterProjectPath}/pubspec.yaml`);
+  if (!isFlutter) {
+    console.log(
+      `${flutterProjectPath}/pubspec.yaml 不存在`,
+      "你必须在flutter目录下运行"
+    );
+    return false;
+  }
+  let files = await find(`${flutterProjectPath}/assets/fmaker`);
+  console.log(`读取到${files.length}个文件`);
+  if (files.length == 0) {
+    console.log("请先添加文件到fmaker目录");
+    return;
+  }
+  var allFileName = [];
+  for (const imgPath of files) {
+    if (imgPath.indexOf(".png") < 1) {
+      continue;
+    }
+    // 获取文件名
+    let fileName = imgPath.substring(
+      imgPath.lastIndexOf("/") + 1,
+      imgPath.length
+    );
+    // 获取倍率
+    let delta = deltaOf(imgPath);
+    if (delta > 0) allFileName.push(fileName);
+  }
+  /// 保存到r.preview.dart
+  var rPreviewContentListString = allFileName
+    .map((name) => {
+      var dartName = toHump(name);
+      return (
+        `/// {@template fmaker.${dartName}.preview}\n` +
+        `/// ![](${flutterProjectPath}/assets/${name}.png)\n` +
+        `/// {@endtemplate}`
+      );
+    })
+    .join("\n\n");
+  var rPreviewContent = `${rPreviewContentListString} \n\n// ignore_for_file: camel_case_types, unused_element \nclass _ {}`;
+  fs.writeFileSync(`${flutterProjectPath}/lib/r.preview.dart`, rPreviewContent);
 }
 
 // 下划线转换驼峰

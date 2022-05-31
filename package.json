@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/mjl0602/flutter-assets-maker#readme",
   "dependencies": {
-    "sharp": "^0.30.3"
+    "commander": "^7.2.0",
+    "sharp": "^0.30.5"
   }
 }

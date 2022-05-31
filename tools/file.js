@@ -15,7 +15,12 @@ function file(path) {
   });
 }
 
-function copyFile(p1, p2) {
+async function copyFile(p1, p2, force) {
+  if (!force)
+    if (await exists(p2)) {
+      console.log(`[INFO]文件 ${p2} 已存在，跳过拷贝`);
+      return;
+    }
   return new Promise((r, e) => {
     fs.copyFile(p1, p2, (error) => {
       if (error) {
