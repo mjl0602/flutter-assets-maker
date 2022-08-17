@@ -182,7 +182,7 @@ async function makeflutter(flutterProjectPath = process.cwd(), config) {
   if (files.length == 0) {
     console.log("请先添加文件到fmaker目录");
   }
-  var allFileName = [];
+  var allAvaliableFiles = [];
   for (const imgPath of files) {
     if (imgPath.indexOf(".png") < 1) {
       continue;
@@ -200,7 +200,10 @@ async function makeflutter(flutterProjectPath = process.cwd(), config) {
       if (delta == 1) {
         if (!isCheck) {
           // console.log("创建资源图", imageName);
-          allFileName.push(imageName);
+          allAvaliableFiles.push({
+            name: imageName,
+            path: imgPath,
+          });
         }
         return `${flutterProjectPath}/assets/${imageName}.png`;
       }
@@ -210,11 +213,11 @@ async function makeflutter(flutterProjectPath = process.cwd(), config) {
     });
   }
   if (!_makeAssets) return;
-  console.log("资源目录：", allFileName);
+  console.log("资源目录：", allAvaliableFiles);
   // 保存到yaml
-  var assetsListString = allFileName
-    .map((name) => {
-      return `    - assets/${name}.png`;
+  var assetsListString = allAvaliableFiles
+    .map((img) => {
+      return `    - assets/${img.name}.png`;
     })
     .join("\n");
   console.log(assetsListString);
@@ -240,8 +243,9 @@ async function makeflutter(flutterProjectPath = process.cwd(), config) {
   /// 保存到r.dart
   await mkdir(`${flutterProjectPath}/lib`);
 
-  var rContentListString = allFileName
-    .map((name) => {
+  var rContentListString = allAvaliableFiles
+    .map((img) => {
+      const name = img.name;
       var dartName = toHump(name);
       return (
         `  /// {@macro fmaker.${dartName}.preview}\n` +
@@ -253,12 +257,16 @@ async function makeflutter(flutterProjectPath = process.cwd(), config) {
   fs.writeFileSync(`${flutterProjectPath}/lib/r.dart`, rContent);
 
   /// 保存到r.preview.dart
-  var rPreviewContentListString = allFileName
-    .map((name) => {
+  var rPreviewContentListString = allAvaliableFiles
+    .map((img) => {
+      const name = img.name;
       var dartName = toHump(name);
+      var stat = fs.statSync(`${img.path}`);
+      var size = (stat.size / 1000).toFixed(1);
       return (
         `/// {@template fmaker.${dartName}.preview}\n` +
-        `/// ![](${flutterProjectPath}/assets/${name}.png)\n` +
+        `/// R.${dartName}(${size}kb): ![](${flutterProjectPath}/assets/${name}.png)  \n` +
+        `/// \n` +
         `/// {@endtemplate}`
       );
     })
