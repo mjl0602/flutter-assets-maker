@@ -6,6 +6,7 @@ const { program } = require("commander");
 const { join } = require("path");
 
 const { makeios, makeAndroid } = require("./builder/ios");
+const { makeScreenshot } = require("./builder/screenshot");
 const {
   initFlutter,
   makeFolder,
@@ -63,6 +64,15 @@ folder
     console.log("\n设置项目文件夹图标完成\n");
   });
 // program.addCommand(folder);
+/** 项目文件夹图标 */
+const screenshot = program.command("screenshot");
+screenshot
+  .description("处理当前文件夹下的截图，处理成Apple的标准尺寸")
+  .action(async (_, __) => {
+    console.log("开始处理截图");
+    await makeScreenshot();
+    console.log("\n处理截图完成\n");
+  });
 
 // 设置版本
 program.version("2.0.0");

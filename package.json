@@ -1,6 +1,6 @@
 {
   "name": "flutter-assets-maker",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Auto creat flutter assets",
   "main": "index.js",
   "scripts": {
