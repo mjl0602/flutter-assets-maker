@@ -249,7 +249,7 @@ async function makeflutter(flutterProjectPath = process.cwd(), config) {
       var dartName = toHump(name);
       return (
         `  /// {@macro fmaker.${dartName}.preview}\n` +
-        `  static final String ${dartName} = 'assets/${name}.png';`
+        `  static const String ${dartName} = 'assets/${name}.png';`
       );
     })
     .join("\n");
